@@ -29,9 +29,9 @@ public class onDeath implements Listener {
                 e.addHandlerToTop(PlayerDeathInventoryDropEvent.Handler.DEFAULT_AUTO_PICKUP);
                 e.addHandlerToTop(PlayerDeathInventoryDropEvent.Handler.DEFAULT_KEEP_SPAWNERS);
                 e.addHandlerToTop(itemDrop());
-            }else{
-                System.out.println("test");
-                e.addHandlerToBottom(PlayerDeathInventoryDropEvent.Handler.DEFAULT_KEEP_SPAWNERS);
+            }
+            if(killer == null){
+                e.addHandlerToTop(PlayerDeathInventoryDropEvent.Handler.DEFAULT_KEEP_SPAWNERS);
             }
         }
     }
