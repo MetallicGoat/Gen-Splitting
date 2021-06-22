@@ -7,7 +7,7 @@ import org.bukkit.command.TabCompleter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class tabCompleter implements TabCompleter {
+public class TabComp implements org.bukkit.command.TabCompleter {
     List<String> arguments = new ArrayList<String>();
 
     public List<String> onTabComplete(CommandSender sender, Command c, String s, String[] args) {

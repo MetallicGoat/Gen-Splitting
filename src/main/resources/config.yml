@@ -18,13 +18,12 @@ Auto-Collect:
     - GOLD_INGOT
     - DIAMOND
     - EMERALD
-  Message: '%color%%item% &f+%amount%'
+  Message: '%item% &f+%amount%'
 
 #How close players have to be together in order for items to split
 #1.5 - 2.0 is recommended
 Split-Radius: 1.5
 
 #Prevents people from dropping items in the void when falling to their death
-#This wont really effect anything unless MBedwars
-#auto-collect (or Direct-Collect) is enabled
+#Basicly useless is Auto-Collect is disabled
 Anti-Void-Drops: false

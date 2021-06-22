@@ -2,13 +2,10 @@ package me.metallicgoat.GenSplitter.Events;
 
 import java.util.List;
 
-import de.marcely.bedwars.api.Arena;
 import de.marcely.bedwars.api.BedwarsAPI;
+import de.marcely.bedwars.api.arena.Arena;
 import me.metallicgoat.GenSplitter.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,13 +14,13 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class onCollect implements Listener {
+public class OnCollect implements Listener {
 
     @EventHandler
     public void onPickup(PlayerPickupItemEvent e) {
         Main plugin = Main.getInstance();
         Player p = e.getPlayer();
-        Arena arena = BedwarsAPI.getArena(p);
+        Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(p);
         boolean enabled = plugin.getConfig().getBoolean("Gen-Splitter");
         double sr = plugin.getConfig().getDouble("Split-Radius");
         if (arena != null) {
