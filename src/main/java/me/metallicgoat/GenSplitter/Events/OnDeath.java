@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 
 public class OnDeath implements Listener {
     @EventHandler
-    public void onItemDrop(PlayerDeathInventoryDropEvent e) {
+    public void deathItemDrop(PlayerDeathInventoryDropEvent e) {
         Main plugin = Main.getInstance();
         e.getHandlerQueue().clear();
         Player killer = e.getPlayer().getKiller();

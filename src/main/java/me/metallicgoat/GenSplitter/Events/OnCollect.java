@@ -24,6 +24,7 @@ public class OnCollect implements Listener {
         boolean enabled = plugin.getConfig().getBoolean("Gen-Splitter");
         double sr = plugin.getConfig().getDouble("Split-Radius");
         if (arena != null) {
+            //Split's if item has NOT already been thrown
             if (!e.isCancelled() &&
                     plugin.getSplitMaterials().contains(e.getItem().getItemStack().getType().name()) &&
                     !e.getItem().hasMetadata("thrown") &&
