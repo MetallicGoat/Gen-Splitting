@@ -1,4 +1,4 @@
-version: 2.0.0-Beta
+version: 2.0.0-Beta5
 name: Gen-Splitter
 author: MetallicGoat
 main: me.metallicgoat.GenSplitter.Main
@@ -8,4 +8,4 @@ depend: [MBedwars]
 commands:
   gen-splitter:
     usage: /<command>
-    permission: gensplitter.reload
+    permission: gensplitter.admin

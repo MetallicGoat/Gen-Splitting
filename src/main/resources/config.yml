@@ -13,6 +13,7 @@ Split-Spawners:
 #So it wont say Iron +0 or whatever
 Auto-Collect:
   Enabled: true
+  Percentage-Kept: 100
   Message-Materials:
     - IRON_INGOT
     - GOLD_INGOT
