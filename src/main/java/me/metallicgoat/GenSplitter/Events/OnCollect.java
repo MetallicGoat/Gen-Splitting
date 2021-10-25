@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class OnCollect implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(PlayerPickupItemEvent e) {
         Main plugin = Main.getInstance();
         Player p = e.getPlayer();
@@ -32,12 +33,11 @@ public class OnCollect implements Listener {
             ) {
                 Location loc = p.getLocation();
                 List<Entity> nearbyEntities = (List<Entity>) loc.getWorld().getNearbyEntities(loc, sr, sr, sr);
-                for (Entity entity : loc.getWorld().getEntities()) {
-                    if (entity instanceof Player &&
-                            nearbyEntities.contains(entity)) {
+                for (Entity entity : nearbyEntities) {
+                    if (entity instanceof Player) {
                         Player split = (Player) entity;
                         if (split.getGameMode() != GameMode.SPECTATOR){
-                            if (split.getUniqueId() != p.getUniqueId()) {
+                            if (split != p) {
                                 ItemStack material = new ItemStack(e.getItem().getItemStack().getType());
                                 material.setAmount(e.getItem().getItemStack().getAmount());
 
@@ -45,7 +45,7 @@ public class OnCollect implements Listener {
                                 im.setLore(null);
                                 material.setItemMeta(im);
 
-                                split.getInventory().addItem(material);
+                                split.getInventory().addItem((ItemStack) e.getItem());
                                 if (Bukkit.getServer().getClass().getPackage().getName().contains("v1_8")) {
                                     split.playSound(split.getLocation(), Sound.valueOf("ITEM_PICKUP"), 0.8F, 1.0F);
                                 }
