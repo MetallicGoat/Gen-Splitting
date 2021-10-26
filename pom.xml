@@ -6,7 +6,7 @@
 
     <groupId>me.metallicgoat</groupId>
     <artifactId>Gen-Splitter</artifactId>
-    <version>v2.0.0</version>
+    <version>v2.0.1</version>
 
     <repositories>
         <repository>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.0</version>
+            <version>5.0.1</version>
         </dependency>
 
     </dependencies>

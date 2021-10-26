@@ -1,12 +1,9 @@
 package me.metallicgoat.GenSplitter.Events;
 
-import java.util.List;
-
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import me.metallicgoat.GenSplitter.Main;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class OnCollect implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPickup(PlayerPickupItemEvent e) {
         Main plugin = Main.getInstance();
         Player p = e.getPlayer();
@@ -32,23 +29,24 @@ public class OnCollect implements Listener {
                     enabled
             ) {
                 Location loc = p.getLocation();
-                List<Entity> nearbyEntities = (List<Entity>) loc.getWorld().getNearbyEntities(loc, sr, sr, sr);
-                for (Entity entity : nearbyEntities) {
-                    if (entity instanceof Player) {
-                        Player split = (Player) entity;
-                        if (split.getGameMode() != GameMode.SPECTATOR){
-                            if (split != p) {
-                                ItemStack material = new ItemStack(e.getItem().getItemStack().getType());
-                                material.setAmount(e.getItem().getItemStack().getAmount());
+                //For all players
+                for(Player split:arena.getPlayers()){
+                    //If player to split with is not player who collected item
+                    if(split != p && split.getGameMode() != GameMode.SPECTATOR){
+                        //If player is in range
+                        if(loc.distance(split.getLocation()) < sr){
 
-                                ItemMeta im = e.getItem().getItemStack().getItemMeta();
-                                im.setLore(null);
-                                material.setItemMeta(im);
+                            //clone item
+                            ItemStack material = new ItemStack(e.getItem().getItemStack().getType());
+                            material.setAmount(e.getItem().getItemStack().getAmount());
 
-                                split.getInventory().addItem((ItemStack) e.getItem());
-                                if (Bukkit.getServer().getClass().getPackage().getName().contains("v1_8")) {
-                                    split.playSound(split.getLocation(), Sound.valueOf("ITEM_PICKUP"), 0.8F, 1.0F);
-                                }
+                            ItemMeta im = e.getItem().getItemStack().getItemMeta();
+                            im.setLore(null);
+                            material.setItemMeta(im);
+
+                            split.getInventory().addItem(material);
+                            if (Bukkit.getServer().getClass().getPackage().getName().contains("v1_8")) {
+                                split.playSound(split.getLocation(), Sound.valueOf("ITEM_PICKUP"), 0.8F, 1.0F);
                             }
                         }
                     }
