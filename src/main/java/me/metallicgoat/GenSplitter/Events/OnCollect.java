@@ -6,7 +6,6 @@ import me.metallicgoat.GenSplitter.Main;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class OnCollect implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onPickup(PlayerPickupItemEvent e) {
         Main plugin = Main.getInstance();
         Player p = e.getPlayer();
@@ -34,7 +33,7 @@ public class OnCollect implements Listener {
                     //If player to split with is not player who collected item
                     if(split != p && split.getGameMode() != GameMode.SPECTATOR){
                         //If player is in range
-                        if(loc.distance(split.getLocation()) < sr){
+                        if(loc.distanceSquared(split.getLocation()) < sr*sr){
 
                             //clone item
                             ItemStack material = new ItemStack(e.getItem().getItemStack().getType());
