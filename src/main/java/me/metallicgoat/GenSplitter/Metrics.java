@@ -1,4 +1,4 @@
-package me.metallicgoat.GenSplitter;
+package me.metallicgoat.gensplitter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

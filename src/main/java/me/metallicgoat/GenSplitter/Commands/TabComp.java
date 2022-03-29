@@ -1,8 +1,7 @@
-package me.metallicgoat.GenSplitter.Commands;
+package me.metallicgoat.gensplitter.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;

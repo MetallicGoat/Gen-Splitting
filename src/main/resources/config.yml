@@ -7,6 +7,14 @@ Split-Spawners:
   - IRON_INGOT
   - GOLD_INGOT
 
+#How close players have to be together in order for items to split
+#1.5 - 2.5 is recommended
+Split-Radius: 2.5
+
+#Prevents people from dropping items in the void when falling to their death
+#Basicly useless is Auto-Collect is disabled
+Anti-Void-Drops: false
+
 #Overrides MBedwars' auto-pickup system
 #The killer only receives this message if a victim has items
 #Only Items that the victim had will be included in the list
@@ -19,12 +27,4 @@ Auto-Collect:
     - GOLD_INGOT
     - DIAMOND
     - EMERALD
-  Message: '%item% &f+%amount%'
-
-#How close players have to be together in order for items to split
-#1.5 - 2.0 is recommended
-Split-Radius: 3.0
-
-#Prevents people from dropping items in the void when falling to their death
-#Basicly useless is Auto-Collect is disabled
-Anti-Void-Drops: false
+  Message: '{item} &f+{amount}'
