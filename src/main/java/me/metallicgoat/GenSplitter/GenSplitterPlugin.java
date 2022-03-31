@@ -1,9 +1,8 @@
 package me.metallicgoat.gensplitter;
 
 import de.marcely.bedwars.tools.Helper;
-import me.metallicgoat.gensplitter.Commands.Commands;
-import me.metallicgoat.gensplitter.Commands.TabComp;
 import me.metallicgoat.gensplitter.Events.*;
+import me.metallicgoat.gensplitter.Util.Config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -17,19 +16,27 @@ import java.io.InputStream;
 
 public class GenSplitterPlugin extends JavaPlugin {
 
-    private static GenSplitterAddon addon;
+    private static final byte MBEDWARS_API_NUM = 10;
+    private static final String MBEDWARS_API_NAME = "5.0.9";
+
+    private GenSplitterAddon addon;
     private static GenSplitterPlugin instance;
     private final Server server = getServer();
 
     public void onEnable() {
-        registerEvents();
-        //registerCommands();
-        instance = this;
-        PluginDescriptionFile pdf = this.getDescription();
-
         int pluginId = 11787;
-        Metrics metrics = new Metrics(this, pluginId);
+        new Metrics(this, pluginId);
 
+        if(!validateMBedwars()) return;
+        if(!registerAddon()) return;
+
+        instance = this;
+        Config.save();
+        registerEvents();
+
+        this.addon.registerCommands();
+
+        PluginDescriptionFile pdf = this.getDescription();
         log(
                 "------------------------------",
                 pdf.getName() + " For MBedwars",
@@ -37,8 +44,6 @@ public class GenSplitterPlugin extends JavaPlugin {
                 "Version: " + pdf.getVersion(),
                 "------------------------------"
         );
-
-        registerAddon();
     }
 
     private void registerEvents() {
@@ -49,17 +54,29 @@ public class GenSplitterPlugin extends JavaPlugin {
         manager.registerEvents(new AutoCollect(), this);
     }
 
-    private void registerCommands() {
-        getCommand("gen-splitter").setExecutor(new Commands());
-        getCommand("gen-splitter").setTabCompleter(new TabComp());
-    }
-
     public static GenSplitterPlugin getInstance() {
         return instance;
     }
 
-    public static GenSplitterAddon getAddon() {
-        return addon;
+    public GenSplitterAddon getAddon() {
+        return this.addon;
+    }
+
+    private boolean validateMBedwars(){
+        try{
+            final Class<?> apiClass = Class.forName("de.marcely.bedwars.api.BedwarsAPI");
+            final int apiVersion = (int) apiClass.getMethod("getAPIVersion").invoke(null);
+
+            if(apiVersion < MBEDWARS_API_NUM)
+                throw new IllegalStateException();
+        }catch(Exception e){
+            getLogger().warning("Sorry, your installed version of MBedwars is not supported. Please install at least v" + MBEDWARS_API_NAME);
+            Bukkit.getPluginManager().disablePlugin(this);
+
+            return false;
+        }
+
+        return true;
     }
 
     private boolean registerAddon(){

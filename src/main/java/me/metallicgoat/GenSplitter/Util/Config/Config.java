@@ -16,11 +16,11 @@ import java.util.List;
 public class Config {
 
     public static File getFile(){
-        return new File(GenSplitterPlugin.getAddon().getDataFolder(), "config.yml");
+        return new File(GenSplitterPlugin.getInstance().getAddon().getDataFolder(), "config.yml");
     }
 
     public static void save(){
-        GenSplitterPlugin.getAddon().getDataFolder().mkdirs();
+        GenSplitterPlugin.getInstance().getAddon().getDataFolder().mkdirs();
 
         synchronized(Config.class){
             try{
