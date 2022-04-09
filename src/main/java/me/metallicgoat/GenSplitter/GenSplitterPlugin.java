@@ -3,6 +3,7 @@ package me.metallicgoat.gensplitter;
 import de.marcely.bedwars.tools.Helper;
 import me.metallicgoat.gensplitter.Events.*;
 import me.metallicgoat.gensplitter.Util.Config.Config;
+import me.metallicgoat.gensplitter.Util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginDescriptionFile;
