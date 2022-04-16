@@ -1,8 +1,8 @@
-package me.metallicgoat.gensplitter.Events;
+package me.metallicgoat.gensplitter.events;
 
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
-import me.metallicgoat.gensplitter.Util.Config.ConfigValue;
+import me.metallicgoat.gensplitter.util.config.ConfigValue;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class VoidDrops implements Listener {
         final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
 
         if(arena != null && ConfigValue.antiVoidDrops){
-            List<Block> blocks = new ArrayList<>();
+            final List<Block> blocks = new ArrayList<>();
             blocks.add(player.getLocation().clone().subtract(0.0D, 0.1D, 0.0D).getBlock());
 
             for(int i = 1; i <= 4; ++i) {

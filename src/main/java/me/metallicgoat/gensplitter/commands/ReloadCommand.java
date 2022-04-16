@@ -1,8 +1,8 @@
-package me.metallicgoat.gensplitter.Commands;
+package me.metallicgoat.gensplitter.commands;
 
 import de.marcely.bedwars.api.message.Message;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;
-import me.metallicgoat.gensplitter.Util.Config.Config;
+import me.metallicgoat.gensplitter.util.config.Config;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 

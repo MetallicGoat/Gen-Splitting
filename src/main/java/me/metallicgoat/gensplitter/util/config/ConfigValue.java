@@ -1,4 +1,4 @@
-package me.metallicgoat.gensplitter.Util.Config;
+package me.metallicgoat.gensplitter.util.config;
 
 import org.bukkit.Material;
 

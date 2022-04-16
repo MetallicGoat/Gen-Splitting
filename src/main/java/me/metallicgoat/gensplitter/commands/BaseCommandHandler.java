@@ -1,4 +1,4 @@
-package me.metallicgoat.gensplitter.Commands;
+package me.metallicgoat.gensplitter.commands;
 
 import de.marcely.bedwars.api.command.CommandHandler;
 import de.marcely.bedwars.api.command.SubCommand;

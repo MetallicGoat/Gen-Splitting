@@ -4,7 +4,7 @@ import de.marcely.bedwars.api.BedwarsAddon;
 import de.marcely.bedwars.api.command.CommandHandler;
 import de.marcely.bedwars.api.command.CommandsCollection;
 import de.marcely.bedwars.api.command.SubCommand;
-import me.metallicgoat.gensplitter.Commands.ReloadCommand;
+import me.metallicgoat.gensplitter.commands.ReloadCommand;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;

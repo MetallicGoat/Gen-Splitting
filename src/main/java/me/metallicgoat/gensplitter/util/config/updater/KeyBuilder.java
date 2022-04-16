@@ -1,4 +1,4 @@
-package me.metallicgoat.gensplitter.Util.Config.Updater;
+package me.metallicgoat.gensplitter.util.config.updater;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

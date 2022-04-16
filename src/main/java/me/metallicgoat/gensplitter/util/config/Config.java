@@ -1,8 +1,8 @@
-package me.metallicgoat.gensplitter.Util.Config;
+package me.metallicgoat.gensplitter.util.config;
 
 import de.marcely.bedwars.tools.Helper;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;
-import me.metallicgoat.gensplitter.Util.Config.Updater.ConfigUpdater;
+import me.metallicgoat.gensplitter.util.config.updater.ConfigUpdater;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

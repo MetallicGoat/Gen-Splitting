@@ -12,7 +12,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
-package me.metallicgoat.gensplitter.Util;
+package me.metallicgoat.gensplitter.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
