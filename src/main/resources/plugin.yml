@@ -1,12 +1,7 @@
 version: 3.0.0
 name: Gen-Splitter
 author: MetallicGoat
-main: me.metallicgoat.gengplitter.GenSplitterPlugin
+main: me.metallicgoat.gensplitter.GenSplitterPlugin
 api-version: 1.13
 description: Gen Splitter for MBedwars
 depend: [MBedwars]
-
-#commands:
-#  gen-splitter:
-#    usage: /<command>
-#    permission: gensplitter.admin

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VoidDrops implements Listener {
+
     @EventHandler
     public void onVoidDrop(PlayerDropItemEvent e) {
         final Player player = e.getPlayer();
@@ -23,13 +24,12 @@ public class VoidDrops implements Listener {
             final List<Block> blocks = new ArrayList<>();
             blocks.add(player.getLocation().clone().subtract(0.0D, 0.1D, 0.0D).getBlock());
 
-            for(int i = 1; i <= 4; ++i) {
+            for(int i = 1; i <= 4; ++i)
                 blocks.add(player.getLocation().clone().subtract(0.0D, i, 0.0D).getBlock());
-            }
 
-            if (blocks.stream().allMatch((b) -> b.getType().equals(Material.AIR))) {
+            if (blocks.stream().allMatch((b) -> b.getType().equals(Material.AIR)))
                 e.setCancelled(true);
-            }
+
         }
     }
 }

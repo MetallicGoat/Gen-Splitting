@@ -4,10 +4,8 @@ import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent;
 import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent.Handler;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import de.marcely.bedwars.api.game.spawner.DropType;
 import de.marcely.bedwars.api.message.Message;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;

@@ -6,7 +6,7 @@
 
     <groupId>me.metallicgoat</groupId>
     <artifactId>Gen-Splitter</artifactId>
-    <version>v2.1.0</version>
+    <version>v3.0.0</version>
 
     <repositories>
         <repository>
@@ -23,13 +23,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.marcely.bedwars</groupId>
             <artifactId>API</artifactId>
-            <version>5.0.9</version>
+            <version>5.0.14.2</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>

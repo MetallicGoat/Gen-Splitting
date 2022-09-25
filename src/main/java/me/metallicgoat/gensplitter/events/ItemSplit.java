@@ -2,8 +2,8 @@ package me.metallicgoat.gensplitter.events;
 
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.tools.Helper;
 import me.metallicgoat.gensplitter.util.config.ConfigValue;
-import me.metallicgoat.gensplitter.util.XSeries.XSound;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,7 +47,10 @@ public class ItemSplit implements Listener {
                         //If player is in range
                         if(loc.distance(split.getLocation()) <= ConfigValue.splitRadius){
                             split.getInventory().addItem(material);
-                            XSound.matchXSound(Sound.ENTITY_ITEM_PICKUP).play(split.getLocation());
+
+                            final Sound sound = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
+                            if(sound != null)
+                                loc.getWorld().playSound(loc, sound, 1, 1);
                         }
                     }
                 }

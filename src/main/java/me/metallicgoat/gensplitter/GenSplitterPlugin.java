@@ -17,8 +17,8 @@ import java.io.InputStream;
 
 public class GenSplitterPlugin extends JavaPlugin {
 
-    private static final byte MBEDWARS_API_NUM = 10;
-    private static final String MBEDWARS_API_NAME = "5.0.9";
+    private static final byte MBEDWARS_API_NUM = 14;
+    private static final String MBEDWARS_API_NAME = "5.0.14";
 
     private GenSplitterAddon addon;
     private static GenSplitterPlugin instance;
@@ -34,8 +34,6 @@ public class GenSplitterPlugin extends JavaPlugin {
         instance = this;
         Config.save();
         registerEvents();
-
-        this.addon.registerCommands();
 
         PluginDescriptionFile pdf = this.getDescription();
         log(
