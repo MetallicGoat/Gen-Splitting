@@ -15,21 +15,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ItemSplit implements Listener {
 
     @EventHandler
-    public void onPickup(PlayerPickupItemEvent e) {
-        final Player p = e.getPlayer();
-        final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(p);
+    public void onPickup(PlayerPickupItemEvent event) {
+        final Player player = event.getPlayer();
+        final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
 
         if (arena != null) {
             //Split's if item has NOT already been thrown
-            if (ConfigValue.splitterEnabled && !e.isCancelled() &&
-                    ConfigValue.splitSpawners.contains(e.getItem().getItemStack().getType()) &&
-                    !e.getItem().hasMetadata("thrown")
+            if (ConfigValue.splitterEnabled && !event.isCancelled() &&
+                    ConfigValue.splitSpawners.contains(event.getItem().getItemStack().getType()) &&
+                    !event.getItem().hasMetadata("thrown")
             ) {
 
                 //clone item
-                final ItemStack material = new ItemStack(e.getItem().getItemStack().getType());
-                material.setAmount(e.getItem().getItemStack().getAmount());
-                final ItemMeta im = e.getItem().getItemStack().getItemMeta();
+                final ItemStack material = new ItemStack(event.getItem().getItemStack().getType());
+                material.setAmount(event.getItem().getItemStack().getAmount());
+                final ItemMeta im = event.getItem().getItemStack().getItemMeta();
 
                 if(im == null)
                     return;
@@ -38,19 +38,21 @@ public class ItemSplit implements Listener {
                 material.setItemMeta(im);
 
                 // Give Item
-                final Location loc = p.getLocation();
+                final Location collectLocation = player.getLocation();
+                final Sound sound = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
+                
                 //For all players
-                for(Player split:arena.getPlayers()){
+                for(Player split : arena.getPlayers()){
                     //If player to split with is not player who collected item
+                    final Location splitLocation = split.getLocation();
 
-                    if(split != p && split.getGameMode() != GameMode.SPECTATOR){
+                    if(split != player && split.getGameMode() != GameMode.SPECTATOR && splitLocation.getWorld() == collectLocation.getWorld()){
                         //If player is in range
-                        if(loc.distance(split.getLocation()) <= ConfigValue.splitRadius){
+                        if(collectLocation.distance(splitLocation) <= ConfigValue.splitRadius){
                             split.getInventory().addItem(material);
 
-                            final Sound sound = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
                             if(sound != null)
-                                loc.getWorld().playSound(loc, sound, 1, 1);
+                                collectLocation.getWorld().playSound(collectLocation, sound, 1, 1);
                         }
                     }
                 }
