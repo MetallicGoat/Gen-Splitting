@@ -1,8 +1,7 @@
 package me.metallicgoat.gensplitter;
 
-import de.marcely.bedwars.tools.Helper;
+import me.metallicgoat.gensplitter.config.Config;
 import me.metallicgoat.gensplitter.events.*;
-import me.metallicgoat.gensplitter.util.config.Config;
 import me.metallicgoat.gensplitter.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -10,15 +9,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 public class GenSplitterPlugin extends JavaPlugin {
 
-    private static final byte MBEDWARS_API_NUM = 14;
-    private static final String MBEDWARS_API_NAME = "5.0.14";
+    private static final byte MBEDWARS_API_NUM = 15;
+    private static final String MBEDWARS_API_NAME = "5.0.15";
 
     private GenSplitterAddon addon;
     private static GenSplitterPlugin instance;
@@ -32,7 +26,7 @@ public class GenSplitterPlugin extends JavaPlugin {
         if(!registerAddon()) return;
 
         instance = this;
-        Config.save();
+        Config.load();
         registerEvents();
 
         PluginDescriptionFile pdf = this.getDescription();
@@ -89,27 +83,6 @@ public class GenSplitterPlugin extends JavaPlugin {
         }
 
         return true;
-    }
-
-    public boolean copyResource(String internalPath, File out) throws IOException {
-        if(!out.exists() || out.length() == 0){
-            try(InputStream is = getResource(internalPath)){
-                if(is == null){
-                    getLogger().warning("Your plugin seems to be broken (Failed to find internal file " + internalPath + ")");
-                    return false;
-                }
-
-                out.createNewFile();
-
-                try(FileOutputStream os = new FileOutputStream(out)){
-                    Helper.get().copy(is, os);
-                }
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void log(String ...args) {

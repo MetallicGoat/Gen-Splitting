@@ -6,7 +6,7 @@
 
     <groupId>me.metallicgoat</groupId>
     <artifactId>Gen-Splitter</artifactId>
-    <version>v3.0.1-Dev-A</version>
+    <version>v3.1.0</version>
 
     <repositories>
         <repository>

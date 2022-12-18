@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.marcely.bedwars.api.game.spawner.DropType;
 import de.marcely.bedwars.api.message.Message;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;
-import me.metallicgoat.gensplitter.util.config.ConfigValue;
+import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

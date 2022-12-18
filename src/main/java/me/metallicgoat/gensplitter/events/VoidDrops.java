@@ -2,7 +2,7 @@ package me.metallicgoat.gensplitter.events;
 
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
-import me.metallicgoat.gensplitter.util.config.ConfigValue;
+import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,8 +16,8 @@ import java.util.List;
 public class VoidDrops implements Listener {
 
     @EventHandler
-    public void onVoidDrop(PlayerDropItemEvent e) {
-        final Player player = e.getPlayer();
+    public void onVoidDrop(PlayerDropItemEvent event) {
+        final Player player = event.getPlayer();
         final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
 
         if(arena != null && ConfigValue.antiVoidDrops){
@@ -28,7 +28,7 @@ public class VoidDrops implements Listener {
                 blocks.add(player.getLocation().clone().subtract(0.0D, i, 0.0D).getBlock());
 
             if (blocks.stream().allMatch((b) -> b.getType().equals(Material.AIR)))
-                e.setCancelled(true);
+                event.setCancelled(true);
         }
     }
 }
