@@ -61,7 +61,6 @@ public class Config {
     }
 
     public static void load(){
-
         final FileConfiguration mainConfig = getConfig();
 
         ConfigValue.splitterEnabled = mainConfig.getBoolean("Gen-Splitter");

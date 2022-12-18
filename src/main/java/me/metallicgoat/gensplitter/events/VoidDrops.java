@@ -29,7 +29,6 @@ public class VoidDrops implements Listener {
 
             if (blocks.stream().allMatch((b) -> b.getType().equals(Material.AIR)))
                 e.setCancelled(true);
-
         }
     }
 }
