@@ -12,15 +12,15 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class MarkThrow implements Listener {
 
-    @EventHandler
-    public void onDrop(PlayerDropItemEvent event) {
-        final Player player = event.getPlayer();
-        final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
+  @EventHandler
+  public void onDrop(PlayerDropItemEvent event) {
+    final Player player = event.getPlayer();
+    final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
 
-        if (ConfigValue.splitterEnabled && arena != null
-                && ConfigValue.splitSpawners.contains(event.getItemDrop().getItemStack().getType())) {
+    if (ConfigValue.splitterEnabled && arena != null
+        && ConfigValue.splitSpawners.contains(event.getItemDrop().getItemStack().getType())) {
 
-            event.getItemDrop().setMetadata("thrown", new FixedMetadataValue(GenSplitterPlugin.getInstance(), "yes!"));
-        }
+      event.getItemDrop().setMetadata("thrown", new FixedMetadataValue(GenSplitterPlugin.getInstance(), "yes!"));
     }
+  }
 }

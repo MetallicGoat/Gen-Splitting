@@ -4,16 +4,16 @@ import de.marcely.bedwars.api.BedwarsAddon;
 
 public class GenSplitterAddon extends BedwarsAddon {
 
-    private final GenSplitterPlugin plugin;
+  private final GenSplitterPlugin plugin;
 
-    public GenSplitterAddon(GenSplitterPlugin plugin) {
-        super(plugin);
+  public GenSplitterAddon(GenSplitterPlugin plugin) {
+    super(plugin);
 
-        this.plugin = plugin;
-    }
+    this.plugin = plugin;
+  }
 
-    @Override
-    public String getName(){
-        return "Gen-Splitter";
-    }
+  @Override
+  public String getName() {
+    return "Gen-Splitter";
+  }
 }
