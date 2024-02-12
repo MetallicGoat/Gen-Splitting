@@ -1,65 +1,82 @@
 package me.metallicgoat.gensplitter.events;
 
-import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.event.player.PlayerPickupDropEvent;
 import de.marcely.bedwars.tools.Helper;
 import me.metallicgoat.gensplitter.config.ConfigValue;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemSplit implements Listener {
 
-  @EventHandler
-  public void onPickup(PlayerPickupItemEvent event) {
-    final Player player = event.getPlayer();
-    final Arena arena = BedwarsAPI.getGameAPI().getArenaByPlayer(player);
-    final ItemStack pickedUpStack = event.getItem().getItemStack();
+  private static final Sound PICKUP_SOUND = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
 
-    if (arena == null)
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+  public void onPlayerPickupDropEvent(PlayerPickupDropEvent event) {
+    if (!event.isFromSpawner() || !ConfigValue.splitterEnabled || event instanceof PlayerPickupDropEventWrapper)
       return;
 
-    // Split's if item has NOT already been thrown
-    if (ConfigValue.splitterEnabled && !event.isCancelled() &&
-        ConfigValue.splitSpawners.contains(pickedUpStack.getType()) &&
-        !event.getItem().hasMetadata("thrown")) {
+    final ItemStack pickedUpStack = event.getItem().getItemStack();
 
-      // clone item - Dont use the clone method
-      final ItemStack clonedStacked = new ItemStack(pickedUpStack.getType());
-      clonedStacked.setAmount(pickedUpStack.getAmount());
-      final ItemMeta im = pickedUpStack.getItemMeta();
+    if (!ConfigValue.splitSpawners.contains(pickedUpStack.getType()))
+      return;
 
-      if (im == null)
-        return;
+    final Player player = event.getPlayer();
+    final Arena arena = event.getArena();
+    final ItemStack clonedStacked = new ItemStack(pickedUpStack.getType());
+    final ItemMeta im = pickedUpStack.getItemMeta();
 
-      im.setLore(null);
-      clonedStacked.setItemMeta(im);
+    if (im == null)
+      return;
 
-      // Give Item
-      final Location collectLocation = player.getLocation();
-      final Sound sound = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
+    im.setLore(null);
+    clonedStacked.setAmount(pickedUpStack.getAmount());
+    clonedStacked.setItemMeta(im);
 
-      // For all players
-      for (Player split : arena.getPlayers()) {
-        // If player to split with is not player who collected item
-        final Location splitLocation = split.getLocation();
+    // give item to all players
+    final Location collectLocation = player.getLocation();
 
-        if (split != player && split.getGameMode() != GameMode.SPECTATOR && splitLocation.getWorld() == collectLocation.getWorld()) {
-          // If player is in range
-          if (collectLocation.distance(splitLocation) <= ConfigValue.splitRadius) {
-            split.getInventory().addItem(clonedStacked);
+    for (Player split : arena.getPlayers()) {
+      if (split == player || split.getGameMode() == GameMode.SPECTATOR || split.getWorld() != collectLocation.getWorld())
+        continue;
 
-            if (sound != null)
-              collectLocation.getWorld().playSound(collectLocation, sound, 1, 1);
-          }
-        }
-      }
+      final Location splitLocation = split.getLocation();
+
+      if (splitLocation.distance(collectLocation) > ConfigValue.splitRadius)
+        continue;
+
+      // ask api
+      final PlayerPickupDropEventWrapper wrapper = new PlayerPickupDropEventWrapper(event);
+
+      Bukkit.getPluginManager().callEvent(wrapper);
+
+      if (wrapper.isCancelled())
+        continue;
+
+      // all good, lets give it him
+      split.getInventory().addItem(clonedStacked);
+
+      if (PICKUP_SOUND != null)
+        collectLocation.getWorld().playSound(collectLocation, PICKUP_SOUND, 1, 1);
+    }
+  }
+
+
+  /**
+   * Used to avoid an infinite loop when we simulate a pickup
+   */
+  private static class PlayerPickupDropEventWrapper extends PlayerPickupDropEvent {
+
+    public PlayerPickupDropEventWrapper(PlayerPickupDropEvent parent) {
+      super(parent.getPlayer(), parent.getArena(), parent.getDropType(), parent.getItem(), parent.isFromSpawner());
     }
   }
 }

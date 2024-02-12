@@ -3,7 +3,6 @@ package me.metallicgoat.gensplitter;
 import me.metallicgoat.gensplitter.config.Config;
 import me.metallicgoat.gensplitter.events.AutoCollect;
 import me.metallicgoat.gensplitter.events.ItemSplit;
-import me.metallicgoat.gensplitter.events.MarkThrow;
 import me.metallicgoat.gensplitter.events.VoidDrops;
 import me.metallicgoat.gensplitter.util.Metrics;
 import org.bukkit.Bukkit;
@@ -48,7 +47,6 @@ public class GenSplitterPlugin extends JavaPlugin {
   private void registerEvents() {
     PluginManager manager = this.server.getPluginManager();
     manager.registerEvents(new ItemSplit(), this);
-    manager.registerEvents(new MarkThrow(), this);
     manager.registerEvents(new VoidDrops(), this);
     manager.registerEvents(new AutoCollect(), this);
   }
