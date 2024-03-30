@@ -19,7 +19,7 @@ public class ItemSplit implements Listener {
 
   private static final Sound PICKUP_SOUND = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
 
-  @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onPlayerPickupDropEvent(PlayerPickupDropEvent event) {
     if (!event.isFromSpawner() || !ConfigValue.splitterEnabled || event instanceof PlayerPickupDropEventWrapper)
       return;
