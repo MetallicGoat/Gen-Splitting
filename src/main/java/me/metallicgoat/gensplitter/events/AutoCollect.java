@@ -1,6 +1,5 @@
 package me.metallicgoat.gensplitter.events;
 
-import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent;
@@ -11,7 +10,6 @@ import me.metallicgoat.gensplitter.GenSplitterPlugin;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
