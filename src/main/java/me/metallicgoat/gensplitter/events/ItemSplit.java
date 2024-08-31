@@ -13,13 +13,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemSplit implements Listener {
 
   private static final Sound PICKUP_SOUND = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
 
-  @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onPlayerPickupDropEvent(PlayerPickupDropEvent event) {
     if (!event.isFromSpawner() || !ConfigValue.splitterEnabled || event instanceof PlayerPickupDropEventWrapper)
       return;
@@ -31,15 +30,6 @@ public class ItemSplit implements Listener {
 
     final Player player = event.getPlayer();
     final Arena arena = event.getArena();
-    final ItemStack clonedStacked = new ItemStack(pickedUpStack.getType());
-    final ItemMeta im = pickedUpStack.getItemMeta();
-
-    if (im == null)
-      return;
-
-    im.setLore(null);
-    clonedStacked.setAmount(pickedUpStack.getAmount());
-    clonedStacked.setItemMeta(im);
 
     // give item to all players
     final Location collectLocation = player.getLocation();
@@ -62,7 +52,7 @@ public class ItemSplit implements Listener {
         continue;
 
       // all good, lets give it him
-      split.getInventory().addItem(clonedStacked);
+      split.getInventory().addItem(pickedUpStack);
 
       if (PICKUP_SOUND != null)
         collectLocation.getWorld().playSound(collectLocation, PICKUP_SOUND, 1, 1);
