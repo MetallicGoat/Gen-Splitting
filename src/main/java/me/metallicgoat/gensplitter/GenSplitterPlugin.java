@@ -1,6 +1,8 @@
 package me.metallicgoat.gensplitter;
 
+import de.marcely.bedwars.api.configuration.ConfigurationAPI;
 import me.metallicgoat.gensplitter.config.Config;
+import me.metallicgoat.gensplitter.config.ConfigValue;
 import me.metallicgoat.gensplitter.events.AutoCollect;
 import me.metallicgoat.gensplitter.events.ItemSplit;
 import me.metallicgoat.gensplitter.events.VoidDrops;
@@ -42,6 +44,19 @@ public class GenSplitterPlugin extends JavaPlugin {
         "Version: " + pdf.getVersion(),
         "------------------------------"
     );
+
+    validateConfiguration();
+  }
+
+  private void validateConfiguration() {
+    if (ConfigValue.splitterEnabled) {
+      final Boolean smartSharing = (Boolean) ConfigurationAPI.get().getValue("smart-item-sharing-enabled");
+
+      if (smartSharing.equals(true)) {
+        ConfigurationAPI.get().setValue("smart-item-sharing-enabled", false);
+        getLogger().warning("Smart item sharing (config \"smart-item-sharing-enabled\" in MBedwars' config.yml) has been disabled to prevent conflicts with GenSplitter.");
+      }
+    }
   }
 
   private void registerEvents() {
