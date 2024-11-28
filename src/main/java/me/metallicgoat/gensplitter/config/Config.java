@@ -47,18 +47,18 @@ public class Config {
       e.printStackTrace();
     }
 
-    ConfigValue.splitterEnabled = config.getBoolean("Gen-Splitter");
+    ConfigValue.splitterEnabled = config.getBoolean("Gen-Splitter", ConfigValue.splitterEnabled);
 
     ConfigValue.splitSpawners = parseMaterialList(config.getStringList("Split-Spawners"));
+    ConfigValue.splitLevelShopAddon = config.getBoolean("Split-LevelShop-Addon", ConfigValue.splitLevelShopAddon);
+    ConfigValue.splitRadius = config.getDouble("Split-Radius", ConfigValue.splitRadius);
 
-    ConfigValue.splitRadius = config.getDouble("Split-Radius");
+    ConfigValue.antiVoidDrops = config.getBoolean("Anti-Void-Drops", ConfigValue.antiVoidDrops);
 
-    ConfigValue.antiVoidDrops = config.getBoolean("Anti-Void-Drops");
-
-    ConfigValue.autoCollectEnabled = config.getBoolean("Auto-Collect.Enabled");
-    ConfigValue.autoCollectPercentKept = config.getInt("Auto-Collect.Percentage-Kept");
+    ConfigValue.autoCollectEnabled = config.getBoolean("Auto-Collect.Enabled", ConfigValue.autoCollectEnabled);
+    ConfigValue.autoCollectPercentKept = config.getInt("Auto-Collect.Percentage-Kept", ConfigValue.autoCollectPercentKept);
     ConfigValue.autoCollectMessageMaterials = parseMaterialList(config.getStringList("Auto-Collect.Message-Materials"));
-    ConfigValue.autoCollectMessage = config.getString("Auto-Collect.Message");
+    ConfigValue.autoCollectMessage = config.getString("Auto-Collect.Message", ConfigValue.autoCollectMessage);
 
 
     // auto update file if newer version
@@ -89,6 +89,11 @@ public class Config {
     config.addComment("Gens that can split");
     config.addComment("https://helpch.at/docs/1.8/org/bukkit/Material.html");
     config.set("Split-Spawners", buildMaterialNameList(ConfigValue.splitSpawners));
+
+    config.addEmptyLine();
+
+    config.addComment("With LevelShop Add-On: Whether picked up levels can split");
+    config.set("Split-LevelShop-Addon", ConfigValue.splitLevelShopAddon);
 
     config.addEmptyLine();
 
