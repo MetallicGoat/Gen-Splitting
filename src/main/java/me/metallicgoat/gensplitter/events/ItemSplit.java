@@ -3,6 +3,7 @@ package me.metallicgoat.gensplitter.events;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.player.PlayerPickupDropEvent;
 import de.marcely.bedwars.tools.Helper;
+import java.util.concurrent.ThreadLocalRandom;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -48,7 +49,7 @@ public class ItemSplit implements Listener {
         continue;
 
       // ask api
-      final PlayerPickupDropEventWrapper wrapper = new PlayerPickupDropEventWrapper(event);
+      final PlayerPickupDropEventWrapper wrapper = new PlayerPickupDropEventWrapper(event, split);
 
       Bukkit.getPluginManager().callEvent(wrapper);
 
@@ -58,8 +59,8 @@ public class ItemSplit implements Listener {
       // all good, lets give it him
       split.getInventory().addItem(pickedUpStack);
 
-      if (PICKUP_SOUND != null)
-        collectLocation.getWorld().playSound(collectLocation, PICKUP_SOUND, 1, 1);
+      if (PICKUP_SOUND != null) // volume and pitch copied from server code
+        collectLocation.getWorld().playSound(collectLocation, PICKUP_SOUND, .1F, ThreadLocalRandom.current().nextFloat() * 1.4f + 1.3f);
     }
   }
 
@@ -69,8 +70,8 @@ public class ItemSplit implements Listener {
    */
   private static class PlayerPickupDropEventWrapper extends PlayerPickupDropEvent {
 
-    public PlayerPickupDropEventWrapper(PlayerPickupDropEvent parent) {
-      super(parent.getPlayer(), parent.getArena(), parent.getDropType(), parent.getItem(), parent.isFromSpawner());
+    public PlayerPickupDropEventWrapper(PlayerPickupDropEvent wrapping, Player player) {
+      super(player, wrapping.getArena(), wrapping.getDropType(), wrapping.getItem(), wrapping.isFromSpawner());
     }
   }
 }

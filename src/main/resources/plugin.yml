@@ -4,4 +4,4 @@ author: MetallicGoat
 main: me.metallicgoat.gensplitter.GenSplitterPlugin
 api-version: 1.13
 description: Gen Splitter for MBedwars
-depend: [MBedwars]
+depend: [MBedwars, MBedwars-LevelShop]

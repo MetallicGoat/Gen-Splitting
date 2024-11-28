@@ -4,6 +4,7 @@ import de.marcely.bedwars.api.configuration.ConfigurationAPI;
 import me.metallicgoat.gensplitter.config.Config;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import me.metallicgoat.gensplitter.events.AutoCollect;
+import me.metallicgoat.gensplitter.events.ExpLevelSplit;
 import me.metallicgoat.gensplitter.events.ItemSplit;
 import me.metallicgoat.gensplitter.events.VoidDrops;
 import me.metallicgoat.gensplitter.util.Metrics;
@@ -64,6 +65,12 @@ public class GenSplitterPlugin extends JavaPlugin {
     manager.registerEvents(new ItemSplit(), this);
     manager.registerEvents(new VoidDrops(), this);
     manager.registerEvents(new AutoCollect(), this);
+
+    if (Bukkit.getPluginManager().getPlugin("MBedwars-LevelShop") != null) {
+      manager.registerEvents(new ExpLevelSplit(), this);
+
+      log("Hooked into \"MBedwars-LevelShop\"");
+    }
   }
 
   public GenSplitterAddon getAddon() {

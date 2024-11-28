@@ -14,6 +14,7 @@ public class ConfigValue {
       Helper.get().getMaterialByName("IRON_INGOT"),
       Helper.get().getMaterialByName("GOLD_INGOT")
   );
+  public static boolean splitLevelShopAddon = true;
 
   public static double splitRadius = 2.5;
 
