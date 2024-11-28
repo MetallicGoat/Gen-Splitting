@@ -36,7 +36,11 @@ public class ItemSplit implements Listener {
     final Location collectLocation = player.getLocation();
 
     for (Player split : arena.getPlayers()) {
-      if (split == player || split.getGameMode() == GameMode.SPECTATOR || split.getWorld() != collectLocation.getWorld())
+      if (split == player ||
+          split.getGameMode() == GameMode.SPECTATOR ||
+          split.getWorld() != collectLocation.getWorld() ||
+          arena.getPlayerTeam(player) != arena.getPlayerTeam(split)
+      )
         continue;
 
       final Location splitLocation = split.getLocation();
