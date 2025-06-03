@@ -6,10 +6,13 @@ import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent;
 import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent.Handler;
 import de.marcely.bedwars.api.game.spawner.DropType;
 import de.marcely.bedwars.api.message.Message;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;
 import me.metallicgoat.gensplitter.config.ConfigValue;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,6 +58,7 @@ public class AutoCollect implements Listener {
           return;
 
         final double percentageKept = 0.01 * ConfigValue.autoCollectPercentKept;
+        final Map<String, MutableInt> givenItems = new HashMap<>();
 
         for (ItemStack is : items) {
           if (percentageKept != 1)
@@ -63,11 +67,16 @@ public class AutoCollect implements Listener {
           if (!ConfigValue.autoCollectMessageMaterials.contains(is.getType()))
             return;
 
-          getItemName(killer, is);
+          // sum up same item types
+          givenItems.computeIfAbsent(getItemName(killer, is), g0 -> new MutableInt())
+              .add(is.getAmount());
+        }
 
+        // send messages
+        for (Map.Entry<String, MutableInt> e : givenItems.entrySet()) {
           final String message = Message.build(ConfigValue.autoCollectMessage)
-              .placeholder("amount", is.getAmount())
-              .placeholder("item", getItemName(killer, is))
+              .placeholder("amount", e.getValue().getValue())
+              .placeholder("item", e.getKey())
               .done();
 
           killer.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
