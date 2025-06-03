@@ -23,20 +23,26 @@ public class AutoCollect implements Listener {
 
   @EventHandler
   public void deathItemDrop(PlayerDeathInventoryDropEvent event) {
-    if (ConfigValue.autoCollectEnabled) {
-      event.getHandlerQueue().clear();
-      final Player killer = event.getPlayer().getKiller();
+    if (!ConfigValue.autoCollectEnabled)
+      return;
 
-      if (killer != null && killer.getGameMode() != GameMode.SPECTATOR) {
-        event.addHandlerToTop(Handler.DEFAULT_AUTO_PICKUP);
-        event.addHandlerToTop(Handler.DEFAULT_KEEP_SPAWNERS);
-        event.addHandlerToTop(itemDrop());
-      }
+    final Player killer = event.getPlayer().getKiller();
 
-      if (killer == null) {
-        event.addHandlerToTop(Handler.DEFAULT_KEEP_SPAWNERS);
-      }
+    if (killer == null || killer.getGameMode() == GameMode.SPECTATOR)
+      return;
+
+    // first handler or after items have been filtered (KEEP_SPAWNERS)
+    final List<Handler> handlers = event.getHandlerQueue();
+    int index = 0;
+
+    {
+      final int filterIndex = handlers.indexOf(Handler.DEFAULT_KEEP_SPAWNERS);
+
+      if (filterIndex != -1)
+        index = filterIndex+1;
     }
+
+    handlers.add(index, itemDrop());
   }
 
   public PlayerDeathInventoryDropEvent.Handler itemDrop() {
