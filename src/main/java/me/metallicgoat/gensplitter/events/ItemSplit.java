@@ -1,12 +1,12 @@
 package me.metallicgoat.gensplitter.events;
 
+import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.player.PlayerPickupDropEvent;
 import de.marcely.bedwars.tools.Helper;
 import java.util.concurrent.ThreadLocalRandom;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class ItemSplit implements Listener {
 
     for (Player split : arena.getPlayers()) {
       if (split == player ||
-          split.getGameMode() == GameMode.SPECTATOR ||
+          GameAPI.get().getSpectatorByPlayer(split) != null ||
           split.getWorld() != collectLocation.getWorld() ||
           arena.getPlayerTeam(player) != arena.getPlayerTeam(split)
       )
