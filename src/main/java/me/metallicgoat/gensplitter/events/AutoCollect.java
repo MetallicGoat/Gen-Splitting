@@ -6,37 +6,44 @@ import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent;
 import de.marcely.bedwars.api.event.player.PlayerDeathInventoryDropEvent.Handler;
 import de.marcely.bedwars.api.game.spawner.DropType;
 import de.marcely.bedwars.api.message.Message;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import me.metallicgoat.gensplitter.GenSplitterPlugin;
 import me.metallicgoat.gensplitter.config.ConfigValue;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class AutoCollect implements Listener {
 
   @EventHandler
   public void deathItemDrop(PlayerDeathInventoryDropEvent event) {
-    if (ConfigValue.autoCollectEnabled) {
-      event.getHandlerQueue().clear();
-      final Player killer = event.getPlayer().getKiller();
+    if (!ConfigValue.autoCollectEnabled)
+      return;
 
-      if (killer != null && killer.getGameMode() != GameMode.SPECTATOR) {
-        event.addHandlerToTop(Handler.DEFAULT_AUTO_PICKUP);
-        event.addHandlerToTop(Handler.DEFAULT_KEEP_SPAWNERS);
-        event.addHandlerToTop(itemDrop());
-      }
+    // avoid wasting time if all are being removed regardless
+    final List<Handler> handlers = event.getHandlerQueue();
 
-      if (killer == null) {
-        event.addHandlerToTop(Handler.DEFAULT_KEEP_SPAWNERS);
-      }
+    if (!handlers.isEmpty() && handlers.get(0) == Handler.DEFAULT_REMOVE_ALL)
+      return;
+
+    // first handler or after items have been filtered (KEEP_SPAWNERS)
+    int index = 0;
+
+    {
+      final int filterIndex = handlers.indexOf(Handler.DEFAULT_KEEP_SPAWNERS);
+
+      if (filterIndex != -1)
+        index = filterIndex+1;
     }
+
+    handlers.add(index, itemDrop());
   }
 
   public PlayerDeathInventoryDropEvent.Handler itemDrop() {
@@ -47,20 +54,29 @@ public class AutoCollect implements Listener {
 
       @Override
       public void execute(Player victim, Arena arena, Player killer, List<ItemStack> items, AtomicInteger atomicInteger) {
+        if (killer == null)
+          return;
+
         final double percentageKept = 0.01 * ConfigValue.autoCollectPercentKept;
+        final Map<String, MutableInt> givenItems = new HashMap<>();
 
         for (ItemStack is : items) {
           if (percentageKept != 1)
             is.setAmount((int) Math.ceil((double) is.getAmount() * percentageKept));
 
-          if (killer == null || !ConfigValue.autoCollectMessageMaterials.contains(is.getType()))
+          if (!ConfigValue.autoCollectMessageMaterials.contains(is.getType()))
             return;
 
-          getItemName(killer, is);
+          // sum up same item types
+          givenItems.computeIfAbsent(getItemName(killer, is), g0 -> new MutableInt())
+              .add(is.getAmount());
+        }
 
+        // send messages
+        for (Map.Entry<String, MutableInt> e : givenItems.entrySet()) {
           final String message = Message.build(ConfigValue.autoCollectMessage)
-              .placeholder("amount", is.getAmount())
-              .placeholder("item", getItemName(killer, is))
+              .placeholder("amount", e.getValue().getValue())
+              .placeholder("item", e.getKey())
               .done();
 
           killer.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
