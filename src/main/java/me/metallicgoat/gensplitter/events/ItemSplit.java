@@ -4,11 +4,10 @@ import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.player.PlayerPickupDropEvent;
 import de.marcely.bedwars.tools.Helper;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiConsumer;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,8 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemSplit implements Listener {
-
-  private static final Sound PICKUP_SOUND = Helper.get().getSoundByName("ENTITY_ITEM_PICKUP");
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onPlayerPickupDropEvent(PlayerPickupDropEvent event) {
@@ -31,16 +28,29 @@ public class ItemSplit implements Listener {
 
     final Player player = event.getPlayer();
     final Arena arena = event.getArena();
-
-    // give item to all players
     final Location collectLocation = player.getLocation();
 
+    getNearbyPlayers(arena, player, collectLocation, (split, splitLoc) -> {
+      // ask api
+      final PlayerPickupDropEventWrapper wrapper = new PlayerPickupDropEventWrapper(event, split);
+
+      Bukkit.getPluginManager().callEvent(wrapper);
+
+      if (wrapper.isCancelled())
+        return;
+
+      // all good, lets give it him
+      split.getInventory().addItem(pickedUpStack);
+      Helper.get().playPickupItemSound(splitLoc);
+    });
+  }
+
+  public static void getNearbyPlayers(Arena arena, Player player, Location collectLocation, BiConsumer<Player, Location> callback) {
     for (Player split : arena.getPlayers()) {
       if (split == player ||
           GameAPI.get().getSpectatorByPlayer(split) != null ||
           split.getWorld() != collectLocation.getWorld() ||
-          arena.getPlayerTeam(player) != arena.getPlayerTeam(split)
-      )
+          arena.getPlayerTeam(player) != arena.getPlayerTeam(split))
         continue;
 
       final Location splitLocation = split.getLocation();
@@ -48,19 +58,7 @@ public class ItemSplit implements Listener {
       if (splitLocation.distance(collectLocation) > ConfigValue.splitRadius)
         continue;
 
-      // ask api
-      final PlayerPickupDropEventWrapper wrapper = new PlayerPickupDropEventWrapper(event, split);
-
-      Bukkit.getPluginManager().callEvent(wrapper);
-
-      if (wrapper.isCancelled())
-        continue;
-
-      // all good, lets give it him
-      split.getInventory().addItem(pickedUpStack);
-
-      if (PICKUP_SOUND != null) // volume and pitch copied from server code
-        collectLocation.getWorld().playSound(collectLocation, PICKUP_SOUND, .1F, ThreadLocalRandom.current().nextFloat() * 1.4f + 1.3f);
+      callback.accept(split, splitLocation);
     }
   }
 

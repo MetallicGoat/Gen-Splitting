@@ -29,14 +29,13 @@
     <dependency>
       <groupId>de.marcely.bedwars</groupId>
       <artifactId>API</artifactId>
-      <version>5.5.3</version>
+      <version>5.5.9</version>
     </dependency>
     <dependency>
-      <groupId>de.marcely.bedwars.addon</groupId>
-      <artifactId>LevelShop</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/libs/public/LevelShop.jar</systemPath>
+      <groupId>de.marcely.bedwars</groupId>
+      <artifactId>Addons-API</artifactId>
+      <version>Build-260929</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

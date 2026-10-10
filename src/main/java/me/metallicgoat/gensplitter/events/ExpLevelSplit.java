@@ -1,24 +1,18 @@
 package me.metallicgoat.gensplitter.events;
 
 import de.marcely.bedwars.api.arena.Arena;
-import de.marcely.bedwars.levelshop.Util;
-import de.marcely.bedwars.levelshop.api.PlayerPickupOrbEvent;
-import de.marcely.bedwars.tools.Helper;
-import java.util.concurrent.ThreadLocalRandom;
+import de.marcely.bedwars.api.levelshop.LevelShopAPI;
+import de.marcely.bedwars.api.levelshop.PlayerPickupLevelItemEvent;
+import de.marcely.bedwars.api.levelshop.PlayerPickupOrbEvent;
 import me.metallicgoat.gensplitter.config.ConfigValue;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class ExpLevelSplit implements Listener {
-
-  private static final Sound PICKUP_SOUND = Helper.get().getSoundByName("ENTITY_EXPERIENCE_ORB_PICKUP");
-  private static final Sound LEVELUP_SOUND = Helper.get().getSoundByName("ENTITY_PLAYER_LEVELUP");
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onPlayerPickupOrbEvent(PlayerPickupOrbEvent event) {
@@ -27,43 +21,47 @@ public class ExpLevelSplit implements Listener {
 
     final Player player = event.getPlayer();
     final Arena arena = event.getArena();
-
     final Location collectLocation = player.getLocation();
 
-    for (Player split : arena.getPlayers()) {
-      if (split == player || split.getGameMode() == GameMode.SPECTATOR || split.getWorld() != collectLocation.getWorld())
-        continue;
-
-      final Location splitLocation = split.getLocation();
-
-      if (splitLocation.distance(collectLocation) > ConfigValue.splitRadius)
-        continue;
-
+    ItemSplit.getNearbyPlayers(arena, player, collectLocation, (split, splitLoc) -> {
       // ask api
       final PlayerPickupOrbEventWrapper wrapper = new PlayerPickupOrbEventWrapper(event, split);
 
       Bukkit.getPluginManager().callEvent(wrapper);
 
       if (wrapper.getLevelAmount() == 0)
-        continue;
+        return;
 
       // all good, lets give it him
       final int newLevel = split.getLevel() + wrapper.getLevelAmount();
 
-      split.setLevel(newLevel);
-      split.setExp(0);
-      split.setTotalExperience(Util.getTotalExp(newLevel)); // fix desyncs
+      LevelShopAPI.get().setEarnedLevel(split, splitLoc, newLevel);
+    });
+  }
 
-      // volume and pitch copied from server code
-      if (PICKUP_SOUND != null)
-        splitLocation.getWorld().playSound(splitLocation, PICKUP_SOUND, .1F, ThreadLocalRandom.current().nextFloat() * .7f + .55f);
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+  public void PlayerPickupLevelItemEvent(PlayerPickupLevelItemEvent event) {
+    if (!ConfigValue.splitterEnabled || !ConfigValue.splitLevelShopAddon || event instanceof PlayerPickupLevelItemEventWrapper)
+      return;
 
-      if (newLevel%5 == 0 && LEVELUP_SOUND != null) {
-        final float f = (newLevel > 30) ? 1.0F : (newLevel / 30.0F);
+    final Player player = event.getPlayer();
+    final Arena arena = event.getArena();
+    final Location collectLocation = player.getLocation();
 
-        split.playSound(splitLocation, LEVELUP_SOUND, f * .75f, 1);
-      }
-    }
+    ItemSplit.getNearbyPlayers(arena, player, collectLocation, (split, splitLoc) -> {
+      // ask api
+      final PlayerPickupLevelItemEventWrapper wrapper = new PlayerPickupLevelItemEventWrapper(event, split);
+
+      Bukkit.getPluginManager().callEvent(wrapper);
+
+      if (wrapper.getPerItemLevelAmount() == 0)
+        return;
+
+      // all good, lets give it him
+      final int newLevel = split.getLevel() + wrapper.getPerItemLevelAmount();
+
+      LevelShopAPI.get().setEarnedLevel(split, splitLoc, newLevel);
+    });
   }
 
 
@@ -73,6 +71,13 @@ public class ExpLevelSplit implements Listener {
   private static class PlayerPickupOrbEventWrapper extends PlayerPickupOrbEvent {
 
     public PlayerPickupOrbEventWrapper(PlayerPickupOrbEvent wrapping, Player player) {
+      super(wrapping, player);
+    }
+  }
+
+  private static class PlayerPickupLevelItemEventWrapper extends PlayerPickupLevelItemEvent {
+
+    public PlayerPickupLevelItemEventWrapper(PlayerPickupLevelItemEvent wrapping, Player player) {
       super(wrapping, player);
     }
   }
