@@ -16,8 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class GenSplitterPlugin extends JavaPlugin {
 
-  private static final short MBEDWARS_API_NUM = 205;
-  private static final String MBEDWARS_API_NAME = "5.5.5";
+  private static final int MBEDWARS_API_NUM = 209;
+  private static final String MBEDWARS_API_NAME = "5.5.9";
   private static GenSplitterPlugin instance;
   private final Server server = getServer();
   private GenSplitterAddon addon;
